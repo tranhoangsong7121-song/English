@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SONG HỌC WRI - Học Tiếng Anh Hiệu Quả</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container-app {
+            max-width: 1400px;
+            margin: 0 auto;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+        }
+        
+        .app-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            height: calc(100vh - 40px);
+            max-height: 900px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .app-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .app-body {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: #f8f9fa;
+            border-right: 1px solid #e9ecef;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+        
+        .nav-item {
+            padding: 16px 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+        
+        .nav-item:hover {
+            background: #e9ecef;
+        }
+        
+        .nav-item.active {
+            background: #e7f3ff;
+            border-left-color: #667eea;
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #495057;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .lesson-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .lesson-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .practice-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: calc(100% - 100px);
+        }
+        
+        .practice-panel {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .text-error {
+            color: #dc3545;
+            background: #ffe6e6;
+        }
+        
+        .text-success {
+            color: #28a745;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                top: 0;
+                bottom: 0;
+                z-index: 100;
+                transition: left 0.3s;
+            }
+            
+            .sidebar.mobile-open {
+                left: 0;
+            }
+            
+            .practice-area {
+                grid-template-columns: 1fr;
+            }
+            
+            .app-container {
+                height: 100vh;
+                border-radius: 0;
+            }
+            
+            .container-app {
+                padding: 0;
+            }
+        }
+        
+        .icon {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+        }
+        
+        .progress-bar {
+            background: #e9ecef;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        // ==================== DATA MANAGEMENT ====================
+        const AppData = {
+            currentUser: null,
+            lessons: [],
+            stats: [],
+            
+            init() {
+                const user = localStorage.getItem('currentUser');
+                if (user) {
+                    this.currentUser = JSON.parse(user);
+                    this.loadLessons();
+                    this.loadStats();
+                }
+            },
+            
+            login(username, password) {
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const user = users.find(u => u.username === username && u.password === password);
+                if (user) {
+                    this.currentUser = { username: user.username, name: user.name };
+                    localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+                    this.loadLessons();
+                    this.loadStats();
+                    this.recordLogin();
+                    return true;
+                }
+                return false;
+            },
+            
+            register(username, password, name) {
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                if (users.find(u => u.username === username)) {
+                    return false;
+                }
+                users.push({ username, password, name });
+                localStorage.setItem('users', JSON.stringify(users));
+                return true;
+            },
+            
+            guestMode() {
+                this.currentUser = { username: 'guest', name: 'Khách' };
+                localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+                this.loadLessons();
+                this.loadStats();
+            },
+            
+            logout() {
+                localStorage.removeItem('currentUser');
+                this.currentUser = null;
+                this.lessons = [];
+                this.stats = [];
+            },
+            
+            loadLessons() {
+                const key = `lessons_${this.currentUser.username}`;
+                this.lessons = JSON.parse(localStorage.getItem(key) || '[]');
+            },
+            
+            saveLessons() {
+                const key = `lessons_${this.currentUser.username}`;
+                localStorage.setItem(key, JSON.stringify(this.lessons));
+            },
+            
+            loadStats() {
+                const key = `stats_${this.currentUser.username}`;
+                this.stats = JSON.parse(localStorage.getItem(key) || '[]');
+            },
+            
+            saveStats() {
+                const key = `stats_${this.currentUser.username}`;
+                localStorage.setItem(key, JSON.stringify(this.stats));
+            },
+            
+            recordLogin() {
+                const today = new Date().toDateString();
+                const existing = this.stats.find(s => s.date === today);
+                if (!existing) {
+                    this.stats.push({
+                        date: today,
+                        logins: 1,
+                        studyTime: 0,
+                        lessonsCompleted: 0
+                    });
+                } else {
+                    existing.logins++;
+                }
+                this.saveStats();
+            },
+            
+            recordStudyTime(minutes) {
+                const today = new Date().toDateString();
+                const existing = this.stats.find(s => s.date === today);
+                if (existing) {
+                    existing.studyTime += minutes;
+                } else {
+                    this.stats.push({
+                        date: today,
+                        logins: 0,
+                        studyTime: minutes,
+                        lessonsCompleted: 0
+                    });
+                }
+                this.saveStats();
+            }
+        };
+
+        // ==================== COMPONENTS ====================
+        const LoginScreen = {
+            render() {
+                return `
+                    <div class="container-app">
+                        <div class="login-card">
+                            <div style="text-align: center; margin-bottom: 32px;">
+                                <h1 style="font-size: 32px; font-weight: 700; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                                    SONG HỌC WRI
+                                </h1>
+                                <p style="color: #6c757d; margin-top: 8px;">Học tiếng Anh hiệu quả với phương pháp ghi nhớ</p>
+                            </div>
+                            
+                            <div id="loginForm">
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #495057;">Tên đăng nhập</label>
+                                    <input type="text" id="loginUsername" class="input-field" placeholder="Nhập tên đăng nhập">
+                                </div>
+                                <div style="margin-bottom: 24px;">
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #495057;">Mật khẩu</label>
+                                    <input type="password" id="loginPassword" class="input-field" placeholder="Nhập mật khẩu">
+                                </div>
+                                <button onclick="handleLogin()" class="btn-primary" style="width: 100%; margin-bottom: 12px;">
+                                    Đăng nhập
+                                </button>
+                                <button onclick="showRegister()" class="btn-secondary" style="width: 100%; margin-bottom: 12px;">
+                                    Đăng ký tài khoản
+                                </button>
+                                <button onclick="handleGuest()" class="btn-secondary" style="width: 100%;">
+                                    Dùng thử không cần tài khoản
+                                </button>
+                            </div>
+                            
+                            <div id="registerForm" class="hidden">
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #495057;">Họ và tên</label>
+                                    <input type="text" id="registerName" class="input-field" placeholder="Nhập họ và tên">
+                                </div>
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #495057;">Tên đăng nhập</label>
+                                    <input type="text" id="registerUsername" class="input-field" placeholder="Nhập tên đăng nhập">
+                                </div>
+                                <div style="margin-bottom: 24px;">
+                                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #495057;">Mật khẩu</label>
+                                    <input type="password" id="registerPassword" class="input-field" placeholder="Nhập mật khẩu">
+                                </div>
+                                <button onclick="handleRegister()" class="btn-primary" style="width: 100%; margin-bottom: 12px;">
+                                    Đăng ký
+                                </button>
+                                <button onclick="showLogin()" class="btn-secondary" style="width: 100%;">
+                                    Quay lại đăng nhập
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        };
+
+        const MainApp = {
+            currentView: 'library',
+            
+            render() {
+                return `
+                    <div class="container-app">
+                        <div class="app-container">
+                            <div class="app-header">
+                                <div>
+                                    <h1 style="font-size: 24px; font-weight: 700;">SONG HỌC WRI</h1>
+                                    <p style="opacity: 0.9; font-size: 14px;">Xin chào, ${AppData.currentUser.name}</p>
+                                </div>
+                                <button onclick="handleLogout()" class="btn-secondary" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">
+                                    Đăng xuất
+                                </button>
+                            </div>
+                            
+                            <div class="app-body">
+                                <div class="sidebar" id="sidebar">
+                                    <div style="flex: 1;">
+                                        <div class="nav-item ${this.currentView === 'library' ? 'active' : ''}" onclick="changeView('library')">
+                                            <span>📚</span>
+                                            <span>Thư viện bài học</span>
+                                        </div>
+                                        <div class="nav-item ${this.currentView === 'practice' ? 'active' : ''}" onclick="changeView('practice')">
+                                            <span>✍️</span>
+                                            <span>Luyện viết</span>
+                                        </div>
+                                        <div class="nav-item ${this.currentView === 'stats' ? 'active' : ''}" onclick="changeView('stats')">
+                                            <span>📊</span>
+                                            <span>Thống kê học tập</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="main-content" id="mainContent">
+                                    ${this.renderContent()}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    ${this.renderModals()}
+                `;
+            },
+            
+            renderContent() {
+                switch(this.currentView) {
+                    case 'library':
+                        return LibraryView.render();
+                    case 'practice':
+                        return PracticeView.render();
+                    case 'stats':
+                        return StatsView.render();
+                    default:
+                        return LibraryView.render();
+                }
+            },
+            
+            renderModals() {
+                return `
+                    <div id="lessonModal" class="modal">
+                        <div class="modal-content">
+                            <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 24px;" id="modalTitle">Thêm bài học mới</h2>
+                            <div style="margin-bottom: 16px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600;">Tiêu đề bài học</label>
+                                <input type="text" id="lessonTitle" class="input-field" placeholder="Nhập tiêu đề bài học">
+                            </div>
+                            <div style="margin-bottom: 24px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600;">Nội dung bài học</label>
+                                <textarea id="lessonContent" class="input-field" rows="10" placeholder="Nhập nội dung tiếng Anh..."></textarea>
+                            </div>
+                            <div style="display: flex; gap: 12px;">
+                                <button onclick="saveLessonModal()" class="btn-primary">Lưu bài học</button>
+                                <button onclick="closeModal('lessonModal')" class="btn-secondary">Hủy</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="practiceModal" class="modal">
+                        <div class="modal-content" style="max-width: 500px;">
+                            <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 24px;">Cài đặt luyện tập</h2>
+                            
+                            <div style="margin-bottom: 20px;">
+                                <label style="display: block; margin-bottom: 12px; font-weight: 600; font-size: 16px;">Mức độ luyện tập</label>
+                                <div style="display: flex; flex-direction: column; gap: 10px;">
+                                    <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; cursor: pointer;">
+                                        <input type="radio" name="practiceLevel" value="sentence" checked style="margin-right: 12px;">
+                                        <div>
+                                            <div style="font-weight: 600;">Từng câu</div>
+                                            <div style="font-size: 13px; color: #6c757d;">Luyện tập theo từng câu một</div>
+                                        </div>
+                                    </label>
+                                    <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; cursor: pointer;">
+                                        <input type="radio" name="practiceLevel" value="paragraph" style="margin-right: 12px;">
+                                        <div>
+                                            <div style="font-weight: 600;">Từng đoạn</div>
+                                            <div style="font-size: 13px; color: #6c757d;">Luyện tập theo từng đoạn văn</div>
+                                        </div>
+                                    </label>
+                                    <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; cursor: pointer;">
+                                        <input type="radio" name="practiceLevel" value="full" style="margin-right: 12px;">
+                                        <div>
+                                            <div style="font-weight: 600;">Toàn bài</div>
+                                            <div style="font-size: 13px; color: #6c757d;">Luyện tập toàn bộ bài viết</div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-bottom: 20px;">
+                                <label style="display: block; margin-bottom: 12px; font-weight: 600; font-size: 16px;">Cách học</label>
+                                <div style="display: flex; flex-direction: column; gap: 10px;">
+                                    <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; cursor: pointer;">
+                                        <input type="radio" name="practiceMode" value="view" checked style="margin-right: 12px;">
+                                        <div>
+                                            <div style="font-weight: 600;">Vừa xem vừa chép</div>
+                                            <div style="font-size: 13px; color: #6c757d;">Bài gốc hiển thị bên trái</div>
+                                        </div>
+                                    </label>
+                                    <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; cursor: pointer;">
+                                        <input type="radio" name="practiceMode" value="memory" style="margin-right: 12px;">
+                                        <div>
+                                            <div style="font-weight: 600;">Ghi nhớ rồi chép lại</div>
+                                            <div style="font-size: 13px; color: #6c757d;">Bài gốc bị ẩn hoàn toàn</div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-bottom: 24px;">
+                                <label style="display: block; margin-bottom: 12px; font-weight: 600; font-size: 16px;">Chế độ sửa lỗi</label>
+                                <div style="display: flex; flex-direction: column; gap: 10px;">
+                                    <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; cursor: pointer;">
+                                        <input type="radio" name="errorMode" value="realtime" checked style="margin-right: 12px;">
+                                        <div>
+                                            <div style="font-weight: 600;">Phát hiện lỗi ngay</div>
+                                            <div style="font-size: 13px; color: #6c757d;">Chữ sai hiển thị màu đỏ khi gõ</div>
+                                        </div>
+                                    </label>
+                                    <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; cursor: pointer;">
+                                        <input type="radio" name="errorMode" value="submit" style="margin-right: 12px;">
+                                        <div>
+                                            <div style="font-weight: 600;">Chấm sau khi nộp</div>
+                                            <div style="font-size: 13px; color: #6c757d;">Chỉ hiển thị lỗi sau khi hoàn thành</div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; gap: 12px;">
+                                <button onclick="startPractice()" class="btn-primary">Bắt đầu luyện tập</button>
+                                <button onclick="closeModal('practiceModal')" class="btn-secondary">Hủy</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="resultModal" class="modal">
+                        <div class="modal-content" style="max-width: 500px;">
+                            <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 24px; text-align: center;">🎉 Kết quả luyện tập</h2>
+                            <div id="resultContent"></div>
+                            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                                <button onclick="closeModal('resultModal'); changeView('practice');" class="btn-primary" style="flex: 1;">Luyện lại</button>
+                                <button onclick="closeModal('resultModal'); changeView('library');" class="btn-secondary" style="flex: 1;">Về thư viện</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        };
+
+        const LibraryView = {
+            render() {
+                const lessons = AppData.lessons;
+                return `
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                            <h2 style="font-size: 28px; font-weight: 700;">Thư viện bài học</h2>
+                            <button onclick="openAddLesson()" class="btn-primary">
+                                + Thêm bài học mới
+                            </button>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <input type="text" id="searchInput" class="input-field" placeholder="🔍 Tìm kiếm bài học..." oninput="searchLessons()">
+                        </div>
+                        
+                        <div id="lessonsList">
+                            ${lessons.length === 0 ? `
+                                <div style="text-align: center; padding: 60px 20px; color: #6c757d;">
+                                    <div style="font-size: 48px; margin-bottom: 16px;">📚</div>
+                                    <h3 style="font-size: 20px; margin-bottom: 8px;">Chưa có bài học nào</h3>
+                                    <p>Hãy thêm bài học đầu tiên của bạn!</p>
+                                </div>
+                            ` : lessons.map((lesson, index) => `
+                                <div class="lesson-card" onclick="selectLesson(${index})">
+                                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                                        <div style="flex: 1;">
+                                            <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">${lesson.title}</h3>
+                                            <p style="color: #6c757d; font-size: 14px; line-height: 1.5; max-height: 60px; overflow: hidden;">
+                                                ${lesson.content.substring(0, 150)}...
+                                            </p>
+                                        </div>
+                                        <div style="display: flex; gap: 8px; margin-left: 16px;">
+                                            <button onclick="event.stopPropagation(); editLesson(${index})" class="btn-secondary" style="padding: 8px 16px;">
+                                                ✏️ Sửa
+                                            </button>
+                                            <button onclick="event.stopPropagation(); deleteLesson(${index})" class="btn-secondary" style="padding: 8px 16px; color: #dc3545;">
+                                                🗑️ Xóa
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+        };
+
+        const PracticeView = {
+            currentLesson: null,
+            currentSettings: null,
+            startTime: null,
+            currentIndex: 0,
+            segments: [],
+            userInput: '',
+            
+            render() {
+                if (!this.currentLesson) {
+                    return `
+                        <div style="text-align: center; padding: 60px 20px; color: #6c757d;">
+                            <div style="font-size: 48px; margin-bottom: 16px;">✍️</div>
+                            <h3 style="font-size: 20px; margin-bottom: 8px;">Chọn bài học để bắt đầu</h3>
+                            <p style="margin-bottom: 24px;">Vào thư viện bài học và chọn một bài để luyện tập</p>
+                            <button onclick="changeView('library')" class="btn-primary">
+                                Đến thư viện bài học
+                            </button>
+                        </div>
+                    `;
+                }
+                
+                const settings = this.currentSettings;
+                const segment = this.segments[this.currentIndex];
+                const progress = ((this.currentIndex / this.segments.length) * 100).toFixed(0);
+                
+                return `
+                    <div style="height: 100%; display: flex; flex-direction: column;">
+                        <div style="margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                <h2 style="font-size: 24px; font-weight: 700;">${this.currentLesson.title}</h2>
+                                <button onclick="exitPractice()" class="btn-secondary">❌ Thoát</button>
+                            </div>
+                            <div style="display: flex; gap: 16px; margin-bottom: 8px; font-size: 14px; color: #6c757d;">
+                                <span>📝 ${settings.level === 'sentence' ? 'Từng câu' : settings.level === 'paragraph' ? 'Từng đoạn' : 'Toàn bài'}</span>
+                                <span>👁️ ${settings.mode === 'view' ? 'Vừa xem vừa chép' : 'Ghi nhớ rồi chép'}</span>
+                                <span>✔️ ${settings.errorMode === 'realtime' ? 'Phát hiện lỗi ngay' : 'Chấm sau khi nộp'}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: #6c757d; margin-bottom: 4px;">
+                                <span>Tiến độ: ${this.currentIndex + 1}/${this.segments.length}</span>
+                                <span>${progress}%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progress}%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="practice-area" style="flex: 1;">
+                            ${settings.mode === 'view' ? `
+                                <div class="practice-panel">
+                                    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px; color: #667eea;">📖 Bài gốc</h3>
+                                    <div style="line-height: 1.8; white-space: pre-wrap;">${segment}</div>
+                                </div>
+                            ` : `
+                                <div class="practice-panel" style="display: flex; align-items: center; justify-content: center; background: #f8f9fa;">
+                                    <div style="text-align: center; color: #6c757d;">
+                                        <div style="font-size: 48px; margin-bottom: 16px;">🧠</div>
+                                        <p style="font-size: 16px; font-weight: 600;">Chế độ ghi nhớ</p>
+                                        <p style="font-size: 14px;">Hãy nhập lại bài từ trí nhớ</p>
+                                    </div>
+                                </div>
+                            `}
+                            
+                            <div class="practice-panel">
+                                <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px; color: #667eea;">✍️ Nhập bài của bạn</h3>
+                                <textarea 
+                                    id="practiceInput" 
+                                    class="input-field" 
+                                    style="height: calc(100% - 100px); font-size: 16px; line-height: 1.8;"
+                                    placeholder="Bắt đầu nhập..."
+                                    oninput="handlePracticeInput()"
+                                >${this.userInput}</textarea>
+                                <div style="margin-top: 16px; display: flex; gap: 12px;">
+                                    ${this.currentIndex > 0 ? `<button onclick="previousSegment()" class="btn-secondary">⬅️ Trước</button>` : ''}
+                                    ${this.currentIndex < this.segments.length - 1 ? 
+                                        `<button onclick="nextSegment()" class="btn-primary" style="flex: 1;">Tiếp theo ➡️</button>` :
+                                        `<button onclick="submitPractice()" class="btn-primary" style="flex: 1;">🎯 Hoàn thành</button>`
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            startPractice(lesson, settings) {
+                this.currentLesson = lesson;
+                this.currentSettings = settings;
+                this.startTime = Date.now();
+                this.currentIndex = 0;
+                this.userInput = '';
+                
+                // Split content based on level
+                if (settings.level === 'sentence') {
+                    this.segments = lesson.content.split(/[.!?]+/).filter(s => s.trim().length > 0).map(s => s.trim() + '.');
+                } else if (settings.level === 'paragraph') {
+                    this.segments = lesson.content.split('\n\n').filter(s => s.trim().length > 0);
+                } else {
+                    this.segments = [lesson.content];
+                }
+                
+                this.renderPractice();
+            },
+            
+            renderPractice() {
+                const content = document.getElementById('mainContent');
+                content.innerHTML = this.render();
+            }
+        };
+
+        const StatsView = {
+            render() {
+                const stats = AppData.stats;
+                const totalLogins = stats.reduce((sum, s) => sum + s.logins, 0);
+                const totalTime = stats.reduce((sum, s) => sum + s.studyTime, 0);
+                const last7Days = stats.slice(-7);
+                
+                return `
+                    <div>
+                        <h2 style="font-size: 28px; font-weight: 700; margin-bottom: 24px;">Thống kê học tập</h2>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 32px;">
+                            <div class="stat-card">
+                                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Tổng số lần đăng nhập</div>
+                                <div style="font-size: 36px; font-weight: 700;">${totalLogins}</div>
+                            </div>
+                            <div class="stat-card">
+                                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Tổng thời gian học</div>
+                                <div style="font-size: 36px; font-weight: 700;">${Math.round(totalTime)} phút</div>
+                            </div>
+                            <div class="stat-card">
+                                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Số bài đã học</div>
+                                <div style="font-size: 36px; font-weight: 700;">${AppData.lessons.length}</div>
+                            </div>
+                        </div>
+                        
+                        <div style="background: white; border: 2px solid #e9ecef; border-radius: 12px; padding: 24px;">
+                            <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 20px;">Thời gian học 7 ngày gần nhất</h3>
+                            <canvas id="statsChart" style="max-height: 300px;"></canvas>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            renderChart() {
+                setTimeout(() => {
+                    const canvas = document.getElementById('statsChart');
+                    if (!canvas) return;
+                    
+                    const stats = AppData.stats.slice(-7);
+                    const ctx = canvas.getContext('2d');
+                    
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: stats.map(s => new Date(s.date).toLocaleDateString('vi-VN', { month: 'short', day: 'numeric' })),
+                            datasets: [{
+                                label: 'Thời gian học (phút)',
+                                data: stats.map(s => s.studyTime),
+                                backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                                borderColor: 'rgba(102, 126, 234, 1)',
+                                borderWidth: 2,
+                                borderRadius: 8
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        stepSize: 5
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }, 100);
+            }
+        };
+
+        // ==================== EVENT HANDLERS ====================
+        let currentEditIndex = -1;
+
+        function handleLogin() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!username || !password) {
+                alert('Vui lòng nhập đầy đủ thông tin!');
+                return;
+            }
+            
+            if (AppData.login(username, password)) {
+                renderApp();
+            } else {
+                alert('Tên đăng nhập hoặc mật khẩu không đúng!');
+            }
+        }
+
+        function handleRegister() {
+            const name = document.getElementById('registerName').value.trim();
+            const username = document.getElementById('registerUsername').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            
+            if (!name || !username || !password) {
+                alert('Vui lòng nhập đầy đủ thông tin!');
+                return;
+            }
+            
+            if (AppData.register(username, password, name)) {
+                alert('Đăng ký thành công! Vui lòng đăng nhập.');
+                showLogin();
+            } else {
+                alert('Tên đăng nhập đã tồn tại!');
+            }
+        }
+
+        function handleGuest() {
+            AppData.guestMode();
+            renderApp();
+        }
+
+        function handleLogout() {
+            if (confirm('Bạn có chắc muốn đăng xuất?')) {
+                AppData.logout();
+                renderApp();
+            }
+        }
+
+        function showRegister() {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.remove('hidden');
+        }
+
+        function showLogin() {
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('loginForm').classList.remove('hidden');
+        }
+
+        function changeView(view) {
+            MainApp.currentView = view;
+            const content = document.getElementById('mainContent');
+            content.innerHTML = MainApp.renderContent();
+            
+            if (view === 'stats') {
+                StatsView.renderChart();
+            }
+        }
+
+        function openAddLesson() {
+            currentEditIndex = -1;
+            document.getElementById('modalTitle').textContent = 'Thêm bài học mới';
+            document.getElementById('lessonTitle').value = '';
+            document.getElementById('lessonContent').value = '';
+            openModal('lessonModal');
+        }
+
+        function editLesson(index) {
+            currentEditIndex = index;
+            const lesson = AppData.lessons[index];
+            document.getElementById('modalTitle').textContent = 'Chỉnh sửa bài học';
+            document.getElementById('lessonTitle').value = lesson.title;
+            document.getElementById('lessonContent').value = lesson.content;
+            openModal('lessonModal');
+        }
+
+        function deleteLesson(index) {
+            if (confirm('Bạn có chắc muốn xóa bài học này?')) {
+                AppData.lessons.splice(index, 1);
+                AppData.saveLessons();
+                changeView('library');
+            }
+        }
+
+        function saveLessonModal() {
+            const title = document.getElementById('lessonTitle').value.trim();
+            const content = document.getElementById('lessonContent').value.trim();
+            
+            if (!title || !content) {
+                alert('Vui lòng nhập đầy đủ thông tin!');
+                return;
+            }
+            
+            if (currentEditIndex >= 0) {
+                AppData.lessons[currentEditIndex] = { title, content };
+            } else {
+                AppData.lessons.push({ title, content });
+            }
+            
+            AppData.saveLessons();
+            closeModal('lessonModal');
+            changeView('library');
+        }
+
+        function selectLesson(index) {
+            PracticeView.currentLesson = AppData.lessons[index];
+            openModal('practiceModal');
+        }
+
+        function startPractice() {
+            const level = document.querySelector('input[name="practiceLevel"]:checked').value;
+            const mode = document.querySelector('input[name="practiceMode"]:checked').value;
+            const errorMode = document.querySelector('input[name="errorMode"]:checked').value;
+            
+            const settings = { level, mode, errorMode };
+            
+            closeModal('practiceModal');
+            changeView('practice');
+            
+            setTimeout(() => {
+                PracticeView.startPractice(PracticeView.currentLesson, settings);
+            }, 100);
+        }
+
+        function handlePracticeInput() {
+            const input = document.getElementById('practiceInput');
+            PracticeView.userInput = input.value;
+            
+            if (PracticeView.currentSettings.errorMode === 'realtime') {
+                const original = PracticeView.segments[PracticeView.currentIndex];
+                const typed = input.value;
+                
+                let html = '';
+                for (let i = 0; i < typed.length; i++) {
+                    if (i < original.length && typed[i] === original[i]) {
+                        html += typed[i];
+                    } else {
+                        html += `<span class="text-error">${typed[i]}</span>`;
+                    }
+                }
+                
+                // Note: Real-time highlighting would require contenteditable div
+                // For simplicity, we're using textarea which doesn't support HTML
+            }
+        }
+
+        function nextSegment() {
+            if (PracticeView.currentIndex < PracticeView.segments.length - 1) {
+                PracticeView.currentIndex++;
+                PracticeView.userInput = '';
+                PracticeView.renderPractice();
+            }
+        }
+
+        function previousSegment() {
+            if (PracticeView.currentIndex > 0) {
+                PracticeView.currentIndex--;
+                PracticeView.userInput = '';
+                PracticeView.renderPractice();
+            }
+        }
+
+        function submitPractice() {
+            const endTime = Date.now();
+            const timeSpent = Math.round((endTime - PracticeView.startTime) / 1000 / 60); // minutes
+            
+            // Calculate accuracy
+            const original = PracticeView.segments.join(' ');
+            const typed = PracticeView.userInput;
+            
+            const originalWords = original.split(/\s+/);
+            const typedWords = typed.split(/\s+/);
+            
+            let correctWords = 0;
+            const maxLength = Math.max(originalWords.length, typedWords.length);
+            
+            for (let i = 0; i < maxLength; i++) {
+                if (originalWords[i] === typedWords[i]) {
+                    correctWords++;
+                }
+            }
+            
+            const accuracy = ((correctWords / originalWords.length) * 100).toFixed(1);
+            const wrongWords = originalWords.length - correctWords;
+            
+            // Save stats
+            AppData.recordStudyTime(timeSpent);
+            
+            // Show results
+            const resultContent = document.getElementById('resultContent');
+            resultContent.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px;">
+                        <div style="background: #e7f3ff; padding: 20px; border-radius: 12px;">
+                            <div style="font-size: 14px; color: #667eea; margin-bottom: 8px;">Độ chính xác</div>
+                            <div style="font-size: 32px; font-weight: 700; color: #667eea;">${accuracy}%</div>
+                        </div>
+                        <div style="background: #e7f3ff; padding: 20px; border-radius: 12px;">
+                            <div style="font-size: 14px; color: #667eea; margin-bottom: 8px;">Thời gian</div>
+                            <div style="font-size: 32px; font-weight: 700; color: #667eea;">${timeSpent} phút</div>
+                        </div>
+                        <div style="background: #d4edda; padding: 20px; border-radius: 12px;">
+                            <div style="font-size: 14px; color: #28a745; margin-bottom: 8px;">Từ đúng</div>
+                            <div style="font-size: 32px; font-weight: 700; color: #28a745;">${correctWords}</div>
+                        </div>
+                        <div style="background: #f8d7da; padding: 20px; border-radius: 12px;">
+                            <div style="font-size: 14px; color: #dc3545; margin-bottom: 8px;">Từ sai</div>
+                            <div style="font-size: 32px; font-weight: 700; color: #dc3545;">${wrongWords}</div>
+                        </div>
+                    </div>
+                    <div style="font-size: 16px; color: #6c757d;">
+                        ${accuracy >= 90 ? '🎉 Xuất sắc! Bạn đã làm rất tốt!' : 
+                          accuracy >= 70 ? '👍 Tốt lắm! Tiếp tục phát huy!' : 
+                          '💪 Cố gắng lên! Luyện tập nhiều hơn nhé!'}
+                    </div>
+                </div>
+            `;
+            
+            openModal('resultModal');
+        }
+
+        function exitPractice() {
+            if (confirm('Bạn có chắc muốn thoát? Tiến độ sẽ không được lưu.')) {
+                PracticeView.currentLesson = null;
+                PracticeView.currentSettings = null;
+                changeView('library');
+            }
+        }
+
+        function searchLessons() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const lessons = AppData.lessons;
+            
+            const filtered = lessons.filter(lesson => 
+                lesson.title.toLowerCase().includes(query) || 
+                lesson.content.toLowerCase().includes(query)
+            );
+            
+            const lessonsList = document.getElementById('lessonsList');
+            
+            if (filtered.length === 0) {
+                lessonsList.innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px; color: #6c757d;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">🔍</div>
+                        <h3 style="font-size: 20px; margin-bottom: 8px;">Không tìm thấy bài học</h3>
+                        <p>Thử tìm kiếm với từ khóa khác</p>
+                    </div>
+                `;
+            } else {
+                lessonsList.innerHTML = filtered.map((lesson, index) => {
+                    const originalIndex = lessons.indexOf(lesson);
+                    return `
+                        <div class="lesson-card" onclick="selectLesson(${originalIndex})">
+                            <div style="display: flex; justify-content: space-between; align-items: start;">
+                                <div style="flex: 1;">
+                                    <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">${lesson.title}</h3>
+                                    <p style="color: #6c757d; font-size: 14px; line-height: 1.5; max-height: 60px; overflow: hidden;">
+                                        ${lesson.content.substring(0, 150)}...
+                                    </p>
+                                </div>
+                                <div style="display: flex; gap: 8px; margin-left: 16px;">
+                                    <button onclick="event.stopPropagation(); editLesson(${originalIndex})" class="btn-secondary" style="padding: 8px 16px;">
+                                        ✏️ Sửa
+                                    </button>
+                                    <button onclick="event.stopPropagation(); deleteLesson(${originalIndex})" class="btn-secondary" style="padding: 8px 16px; color: #dc3545;">
+                                        🗑️ Xóa
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // ==================== APP INITIALIZATION ====================
+        function renderApp() {
+            const app = document.getElementById('app');
+            
+            if (!AppData.currentUser) {
+                app.innerHTML = LoginScreen.render();
+            } else {
+                app.innerHTML = MainApp.render();
+                if (MainApp.currentView === 'stats') {
+                    StatsView.renderChart();
+                }
+            }
+        }
+
+        // Initialize app
+        AppData.init();
+        renderApp();
+
+        // Handle enter key for login
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const loginForm = document.getElementById('loginForm');
+                const registerForm = document.getElementById('registerForm');
+                
+                if (loginForm && !loginForm.classList.contains('hidden')) {
+                    handleLogin();
+                } else if (registerForm && !registerForm.classList.contains('hidden')) {
+                    handleRegister();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
